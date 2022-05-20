@@ -52,9 +52,11 @@ class Array:
 				return False
 		return True
 
-	def __repr__(self) -> str:
-		return self.__str__()
-
-	def __hash__(self) -> int:
-		"""We need to use object hash because of c level implementation of counting instances that causes inconveniences at the python level."""
-		return super().__hash__()
+	@staticmethod
+	def from_iterable(iterable) -> 'Array':
+		if len(iterable) == 0:
+			return Array(0)
+		out = Array(len(iterable), iterable[0])
+		for idx, x in enumerate(iterable):
+			out[idx] = x
+		return out
