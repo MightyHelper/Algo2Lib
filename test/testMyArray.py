@@ -24,13 +24,6 @@ class TestMyArray(unittest.TestCase):
 		for i in range(5):
 			self.assertEqual(arr.data[i], 0.1 if i == 2 else 0.5)
 
-	def test_iter(self):
-		arr = mArray.Array(5, 0)
-		arr.data = [*range(5)]
-		for i, val in enumerate(arr):
-			self.assertEqual(i, val)
-		self.assertEqual(len(mArray.Array.from_iterable([])), 0)
-
 	def test_exceptions(self):
 		with self.assertRaises(ValueError):
 			mArray.Array(-1, 123, False)

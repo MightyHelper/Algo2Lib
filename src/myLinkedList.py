@@ -1,6 +1,7 @@
-from typing import Union, Optional
+from typing import Union, Optional, Tuple
 
 from .myCopy import copy
+from .myIterable import Iterable
 
 
 class LinkedListNode:
@@ -34,7 +35,7 @@ class LinkedListNode:
 		return self.value == other.value
 
 
-class LinkedList:
+class LinkedList(Iterable):
 	def __init__(self, head: LinkedListNode = None, expected_size: int = 0):
 		self.root = head
 		self.size = expected_size
@@ -52,52 +53,46 @@ class LinkedList:
 			expected_length += 1
 		return LinkedList(out_head.next, expected_length)
 
-	def is_empty(self) -> bool:
-		return self.root is None
-
 	def get_node(self, index: int) -> LinkedListNode:
-		index = self._parse_index(index)
+		index = self.parse_index(index)
 		c_node = self.root
 		for i in range(index):
 			c_node = c_node.next
 		return c_node
 
-	def _parse_index(self, index, default=None):
-		if index is None:
-			if default is None:
-				raise ValueError("Default value: None")
-			else:
-				return default
-		if index < 0:
-			index = self.size + index
-		if index >= self.size or index < 0:
-			raise IndexError(f"{index=} not available in list of length {self.size}.")
-		return index
-
-	def push_front(self, other: any) -> LinkedListNode:
+	def push_front_(self, other: any) -> LinkedListNode:
 		new_node = LinkedListNode(other, self.root)
 		self.root = new_node
 		self.size += 1
 		return new_node
+
+	def push_front(self, other: any) -> Tuple[any, 'Iterable']:
+		return self.push_front_(other).value, self
 
 	def push_back(self, other: any) -> LinkedListNode:
 		new_node = self.get_node(-1).push_next(other)
 		self.size += 1
 		return new_node
 
-	def pop_front(self) -> LinkedListNode:
+	def pop_front_(self) -> LinkedListNode:
 		out = self.root
 		self.root = self.root.next
 		self.size -= 1
 		return out
 
-	def pop_back(self) -> LinkedListNode:
+	def pop_front(self) -> Tuple[any, 'Iterable']:
+		return self.pop_front_().value, self
+
+	def pop_back_(self) -> LinkedListNode:
 		popped_node = self.get_node(-2).pop_next()
 		self.size -= 1
 		return popped_node
 
+	def pop_back(self) -> Tuple[any, 'Iterable']:
+		return self.pop_back_().value, self
+
 	def get_slice(self, key: slice) -> Optional['LinkedList']:
-		start, stop, step = self._parse_index(key.start, 0), self._parse_index(key.stop, self.size), self._parse_step(key.step, 1)
+		start, stop, step = self.parse_index(key.start, 0), self.parse_index(key.stop, self.size), self.parse_step(key.step, 1)
 		if start > stop:
 			raise IndexError(f"Cannot iterate from {start} to {stop}.")
 		out_list_head = LinkedListNode()
@@ -111,14 +106,6 @@ class LinkedList:
 				c_node = c_node.next
 		return LinkedList(out_list_head.next, expected_size)
 
-	@staticmethod
-	def _parse_step(step, default=1):
-		if step is None:
-			step = default
-		if step < 1:
-			raise IndexError(f"Cannot iterate with step < 1 ... yet.")
-		return step
-
 	def __getitem__(self, key: Union[slice, int]) -> any:
 		if isinstance(key, slice):
 			return self.get_slice(key)
@@ -127,7 +114,7 @@ class LinkedList:
 		raise IndexError(f"Unknown index type {type(key)}.")
 
 	def __setitem__(self, index: int, value: any):
-		index = self._parse_index(index)
+		index = self.parse_index(index)
 		self.get_node(index).value = value
 
 	def __iter__(self):
@@ -141,15 +128,6 @@ class LinkedList:
 		self.__iter = self.__iter.next
 		return out.value
 
-	def __str__(self):
-		return f"[{self.join()}]"
-
-	def join(self, joiner: str = ', ') -> str:
-		out = ""
-		for i in self:
-			out += str(i) + joiner
-		return out[:-2]
-
 	def re_compute_size(self) -> int:
 		self.size = 0
 		c_node = self.root
@@ -158,30 +136,30 @@ class LinkedList:
 			self.size += 1
 		return self.size
 
-	def __len__(self) -> int:
-		return self.size
-
-	def index_of(self, value):
-		for i, val in enumerate(self):
-			if val == value:
-				return i
-		return -1
-
-	def pop_index(self, index: int) -> LinkedListNode:
-		index = self._parse_index(index, None)
+	def pop_index_(self, index: int) -> LinkedListNode:
+		index = self.parse_index(index, None)
 		if index == 0:
-			return self.pop_front()
+			return self.pop_front_()
 		return self.get_node(index - 1).pop_next()
 
-	def push_before_index(self, index: int, value: any) -> LinkedListNode:
-		index = self._parse_index(index)
+	def push_before_index_(self, index: int, value: any) -> LinkedListNode:
+		index = self.parse_index(index)
 		if index == 0:
-			return self.push_front(value)
+			return self.push_front_(value)
 		return self.get_node(index - 1).push_next(value)
 
-	def push_after_index(self, index: int, value: any) -> LinkedListNode:
-		index = self._parse_index(index)
+	def push_after_index_(self, index: int, value: any) -> LinkedListNode:
+		index = self.parse_index(index)
 		return self.get_node(index).push_next(value)
+
+	def pop_index(self, index: int) -> Tuple[any, 'Iterable']:
+		return self.pop_index_(index).value, self
+
+	def push_before_index(self, index: int, value: any) -> Tuple[any, 'Iterable']:
+		return self.push_before_index_(index, value).value, self
+
+	def push_after_index(self, index: int, value: any) -> Tuple[any, 'Iterable']:
+		return self.push_after_index_(index, value).value, self
 
 	def __eq__(self, other):
 		if not isinstance(other, LinkedList):
