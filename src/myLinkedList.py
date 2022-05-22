@@ -36,6 +36,14 @@ class LinkedListNode:
 
 
 class LinkedList(Iterable):
+	def concat(self, other: 'Iterable') -> 'Iterable':
+		out = LinkedListNode()
+		for x in self:
+			out = out.push_next(x)
+		for x in other:
+			out = out.push_next(x)
+		return LinkedList(out.next)
+
 	def __init__(self, head: LinkedListNode = None, expected_size: int = 0):
 		self.root = head
 		self.size = expected_size
@@ -176,4 +184,3 @@ class LinkedList(Iterable):
 			s_node = next(s_node)
 			o_node = next(o_node)
 		return True
-

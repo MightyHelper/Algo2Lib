@@ -52,6 +52,13 @@ def test_iterable(iterable_clz: Type[Iterable]):
 			v, arr = arr.push_before_index(0, 1)
 			self.assertEqual(v, 1)
 			self.assertEqual(arr[0], 1)
+
+		def test_join(self):
+			arr = iterable_clz.from_iterable([1, 2, 3])
+			self.assertEqual(arr.join(""), "123")
+			self.assertEqual(arr.join(", "), "1, 2, 3")
+			self.assertEqual(arr.join("---"), "1---2---3")
+
 	return TestMyIterables
 
 

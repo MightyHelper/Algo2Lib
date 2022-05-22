@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import Optional, Tuple
 
+from src.myCopy import copy
+
 
 class Iterable(ABC):
 	size: int = 0
@@ -94,7 +96,7 @@ class Iterable(ABC):
 		out = ""
 		for i in self:
 			out += str(i) + joiner
-		return out[:-2]
+		return out[:len(out)-len(joiner)]
 
 	def __str__(self):
 		return f"[{self.join()}]"
@@ -102,3 +104,13 @@ class Iterable(ABC):
 	@abstractmethod
 	def get_slice(self, key: slice) -> Optional['Iterable']:
 		pass
+
+	@abstractmethod
+	def concat(self, other: 'Iterable') -> 'Iterable':
+		pass
+
+	def __add__(self, other):
+		if not isinstance(other, Iterable):
+			_, other = copy(self).push_back(other)
+		return self.concat(other)
+
