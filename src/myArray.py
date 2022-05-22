@@ -63,8 +63,8 @@ class Array(Iterable):
 
 	def pop_back(self) -> Tuple[any, 'Iterable']:
 		new_array = self.new_array_of_same_type(len(self) - 1)
-		for i in range(1, len(self)):
-			new_array[i - 1] = self[i]
+		for i in range(len(self) - 1):
+			new_array[i] = self[i]
 		return self[-1], new_array
 
 	def __init__(self, size: int, init_value: any = None, pre_fill: bool = False) -> None:

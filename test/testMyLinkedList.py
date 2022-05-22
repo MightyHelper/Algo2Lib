@@ -4,37 +4,10 @@ import src.myCopy as mCopy
 
 
 class TestMyLinkedList(unittest.TestCase):
-	def test_inserts_iter(self):
-		arr = mLinkedList.LinkedList()
-		arr.push_front(4)
-		arr.push_back(5)
-		arr.push_front(3)
-		arr.push_back(6)
-		arr.push_front(2)
-		arr.push_front(1)
-		arr.push_back(7)
-		self.assertEqual([*arr], [*range(1, 8)])
-		self.assertEqual(arr.pop_front()[0], 1)
-		self.assertEqual(arr.pop_front()[0], 2)
-		self.assertEqual(arr.pop_back()[0], 7)
-		self.assertEqual(arr.pop_back()[0], 6)
-		self.assertEqual(len(arr), 3)
-		self.assertEqual(str(arr), str([*range(3, 6)]))
 
 	def test_from_iterable(self):
 		iterable = [1, 2, 4, 8, 2, 1, 78]
 		self.assertEqual([*mLinkedList.LinkedList.from_iterable(iterable)], iterable)
-
-	def test_slices(self):
-		iterable = [*range(100)]
-		arr = mLinkedList.LinkedList.from_iterable(iterable)
-		for i in range(50, 80, 3):
-			self.assertEqual([*arr[i:90]], iterable[i:90])
-		for i in range(50, 80, 3):
-			self.assertEqual([*arr[i:90:3]], iterable[i:90:3])
-		for i in range(50, 80, 3):
-			self.assertEqual([*arr[i:]], iterable[i:])
-			self.assertEqual([*arr[:i]], iterable[:i])
 
 	def test_set_item(self):
 		arr = mLinkedList.LinkedList.from_iterable([*range(10)])

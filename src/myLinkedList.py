@@ -77,10 +77,13 @@ class LinkedList(Iterable):
 	def push_front(self, other: any) -> Tuple[any, 'Iterable']:
 		return self.push_front_(other).value, self
 
-	def push_back(self, other: any) -> LinkedListNode:
+	def push_back_(self, other: any) -> LinkedListNode:
 		new_node = self.get_node(-1).push_next(other)
 		self.size += 1
 		return new_node
+
+	def push_back(self, other: any) -> Tuple[any, 'Iterable']:
+		return self.push_back_(other).value, self
 
 	def pop_front_(self) -> LinkedListNode:
 		out = self.root
