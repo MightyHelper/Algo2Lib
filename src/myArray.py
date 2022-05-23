@@ -1,4 +1,4 @@
-from typing import Optional, Union, Tuple
+from typing import Optional, Union, Tuple, Type
 
 from .myCopy import copy
 from .myIterable import Iterable
@@ -27,9 +27,19 @@ class Array(Iterable):
 		return self[index], new_array
 
 	def new_array_of_same_type(self, length: int) -> 'Array':
-		new_array = Array(length)
-		new_array.type = self.type
-		return new_array
+		return Array.of_type(length, self.type)
+
+	def __copy__(self):
+		out = self.new_array_of_same_type(len(self))
+		for i, v in enumerate(self):
+			out[i] = v
+		return out
+
+	@staticmethod
+	def of_type(size: int, t: Type) -> 'Array':
+		out = Array(size)
+		out.type = t
+		return out
 
 	def push_before_index(self, index: int, value: any) -> Tuple[any, 'Iterable']:
 		new_array = self.new_array_of_same_type(len(self) + 1)

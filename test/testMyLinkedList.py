@@ -51,6 +51,10 @@ class TestMyLinkedList(unittest.TestCase):
 		arr = mLinkedList.LinkedList.from_iterable([1, 2, 3, 4, 5, 65])
 		arr2 = mCopy.copy(arr)
 		self.assertEqual(arr, arr2)
+		a = mLinkedList.LinkedList.from_iterable([*range(200000)])
+		b = mCopy.copy(a)
+		a[5] = 122
+		self.assertEqual(b[5], 5)
 
 	def test_node(self):
 		for x in (123, "123", 0.5, 1 + 1j):
@@ -58,11 +62,17 @@ class TestMyLinkedList(unittest.TestCase):
 		self.assertNotEqual(mLinkedList.LinkedListNode(123), 123)
 
 	def test_eq(self):
-		self.assertEqual(mLinkedList.LinkedList.from_iterable([1,2,3]),mLinkedList.LinkedList.from_iterable([1,2,3]))
-		self.assertNotEqual(mLinkedList.LinkedList.from_iterable([1,2,3]),[1,2,3])
-		self.assertNotEqual(mLinkedList.LinkedList.from_iterable([1,2,3]),mLinkedList.LinkedList.from_iterable([1,2,3,4]))
-		self.assertEqual(mLinkedList.LinkedList.from_iterable([]),mLinkedList.LinkedList.from_iterable([]))
-		self.assertNotEqual(mLinkedList.LinkedList.from_iterable([1,2,3]),mLinkedList.LinkedList.from_iterable([1,4,3]))
+		self.assertEqual(mLinkedList.LinkedList.from_iterable([1, 2, 3]), mLinkedList.LinkedList.from_iterable([1, 2, 3]))
+		self.assertNotEqual(mLinkedList.LinkedList.from_iterable([1, 2, 3]), [1, 2, 3])
+		self.assertNotEqual(mLinkedList.LinkedList.from_iterable([1, 2, 3]), mLinkedList.LinkedList.from_iterable([1, 2, 3, 4]))
+		self.assertEqual(mLinkedList.LinkedList.from_iterable([]), mLinkedList.LinkedList.from_iterable([]))
+		self.assertNotEqual(mLinkedList.LinkedList.from_iterable([1, 2, 3]), mLinkedList.LinkedList.from_iterable([1, 4, 3]))
+
+	def test_concat(self):
+		self.assertEqual(
+				mLinkedList.LinkedList.from_iterable([1, 2, 3, 4, 5]),
+				mLinkedList.LinkedList.from_iterable([1, 2]).concat([3, 4, 5])
+		)
 
 
 if __name__ == '__main__':

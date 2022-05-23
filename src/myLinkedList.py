@@ -13,7 +13,18 @@ class LinkedListNode:
 		return self.next
 
 	def __copy__(self):
-		return LinkedListNode(copy(self.value), copy(self.next))
+		out_node = LinkedListNode(copy(self.value), None)
+		c_node = self.next
+		c_out_node = out_node
+		if c_node is not None:
+			while c_node.next is not None:
+				new = LinkedListNode(copy(c_node.value))
+				c_out_node.next = new
+				c_out_node = new
+				c_node = c_node.next
+			new = LinkedListNode(copy(c_node.value))
+			c_out_node.next = new
+		return out_node
 
 	def push_next(self, other: any) -> 'LinkedListNode':
 		new_node = LinkedListNode(other, self.next)
@@ -36,13 +47,13 @@ class LinkedListNode:
 
 
 class LinkedList(Iterable):
-	def concat(self, other: 'Iterable') -> 'Iterable':
+	def concat(self, other: 'Iterable') -> 'LinkedList':
 		out = LinkedListNode()
 		for x in self:
-			out = out.push_next(x)
+			out.push_next(x)
 		for x in other:
-			out = out.push_next(x)
-		return LinkedList(out.next)
+			out.push_next(x)
+		return LinkedList(out.next, len(self) + len(other)).reversed()
 
 	def __init__(self, head: LinkedListNode = None, expected_size: int = 0):
 		self.root = head
@@ -74,15 +85,19 @@ class LinkedList(Iterable):
 		self.size += 1
 		return new_node
 
-	def push_front(self, other: any) -> Tuple[any, 'Iterable']:
+	def push_front(self, other: any) -> Tuple[any, 'LinkedList']:
 		return self.push_front_(other).value, self
 
 	def push_back_(self, other: any) -> LinkedListNode:
+		if self.size == 0:
+			self.root = LinkedListNode(other)
+			self.size += 1
+			return self.root
 		new_node = self.get_node(-1).push_next(other)
 		self.size += 1
 		return new_node
 
-	def push_back(self, other: any) -> Tuple[any, 'Iterable']:
+	def push_back(self, other: any) -> Tuple[any, 'LinkedList']:
 		return self.push_back_(other).value, self
 
 	def pop_front_(self) -> LinkedListNode:
@@ -91,7 +106,7 @@ class LinkedList(Iterable):
 		self.size -= 1
 		return out
 
-	def pop_front(self) -> Tuple[any, 'Iterable']:
+	def pop_front(self) -> Tuple[any, 'LinkedList']:
 		return self.pop_front_().value, self
 
 	def pop_back_(self) -> LinkedListNode:
@@ -99,7 +114,7 @@ class LinkedList(Iterable):
 		self.size -= 1
 		return popped_node
 
-	def pop_back(self) -> Tuple[any, 'Iterable']:
+	def pop_back(self) -> Tuple[any, 'LinkedList']:
 		return self.pop_back_().value, self
 
 	def get_slice(self, key: slice) -> Optional['LinkedList']:
@@ -163,13 +178,13 @@ class LinkedList(Iterable):
 		index = self.parse_index(index)
 		return self.get_node(index).push_next(value)
 
-	def pop_index(self, index: int) -> Tuple[any, 'Iterable']:
+	def pop_index(self, index: int) -> Tuple[any, 'LinkedList']:
 		return self.pop_index_(index).value, self
 
-	def push_before_index(self, index: int, value: any) -> Tuple[any, 'Iterable']:
+	def push_before_index(self, index: int, value: any) -> Tuple[any, 'LinkedList']:
 		return self.push_before_index_(index, value).value, self
 
-	def push_after_index(self, index: int, value: any) -> Tuple[any, 'Iterable']:
+	def push_after_index(self, index: int, value: any) -> Tuple[any, 'LinkedList']:
 		return self.push_after_index_(index, value).value, self
 
 	def __eq__(self, other):
@@ -187,3 +202,9 @@ class LinkedList(Iterable):
 			s_node = next(s_node)
 			o_node = next(o_node)
 		return True
+
+	def reversed(self) -> 'LinkedList':
+		out = LinkedListNode()
+		for i in self:
+			out.push_next(i)
+		return LinkedList(out.next, len(self))
