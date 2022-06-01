@@ -4,18 +4,22 @@ from .myArray import Array
 from .myCopy import copy
 from .myLinkedList import LinkedList
 from .myPair import Pair
+from .myString import String
 
 
 class AVL:
 	def __init__(self, root: 'AVLNode' = None):
+		self.size = 0
 		self.root = root
 
 	def __setitem__(self, key: int, value: any):
 		node = AVLNode(key, value)
 		if self.root is None:
 			self.root = node
+			self.size += 1
 			return
 		self.root = self.root.insert(node)
+		self.size += 1
 
 	def __getitem__(self, item: int) -> any:
 		if self.root is None:
@@ -27,9 +31,37 @@ class AVL:
 		if self.root is None:
 			raise ValueError(f"Item {key} to delete not found")
 		self.root = self.root.delete(key)
+		self.size -= 1
 
+	# def __str__(self):
+	# 	return f"AVL{'[]' if self.root is None else self.root.in_order()}"
 	def __str__(self):
-		return f"AVL{'[]' if self.root is None else self.root.in_order()}"
+		# return f"[{self.root.str(0) if self.root is not None else 'Empty'}]"
+		height = self.compute_height()
+		out = Array(height, Array(1))
+		for i in range(height):
+			out[i] = Array(self.size, "", True)
+		out, _ = self.root.locate(out, 0, 0)
+		widths = Array(self.size, 0)
+		for i in range(self.size):
+			max_height = 0
+			for j in range(height):
+				le = len(out[j][i])
+				max_height = le if le > max_height else max_height
+			widths[i] = max_height
+
+		out_total = String("")
+
+		for i in range(height):
+			for j in range(self.size):
+				out_total = out_total + String(out[i][j]).ljust(widths[j], String(" "))
+			out_total = out_total + String("\n")
+		return str(out_total)
+
+	def compute_height(self):
+		if self.root is None:
+			return 0
+		return self.root.get_height()
 
 
 class AVLNode:
@@ -41,6 +73,13 @@ class AVLNode:
 		self.data = Pair(key, value)
 		self.balance_factor = 0
 		self.height = 0
+
+	def locate(self, arr, x, y):
+		if self.left: arr, x = self.left.locate(arr, x, y+1)
+		arr[y][x] = str(self.value)
+		x += 1
+		if self.right: arr, x = self.right.locate(arr, x, y+1)
+		return arr, x
 
 	def __copy__(self):
 		out = AVLNode(self.key, self.value)

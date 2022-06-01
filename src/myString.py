@@ -21,8 +21,8 @@ class String(Array):
 		return self.concat(other)
 
 	def __mul__(self, other: int) -> 'String':
-		out = String(self)
-		for i in range(other - 1):
+		out = String("")
+		for i in range(other):
 			out = out + self
 		return out
 
@@ -73,6 +73,9 @@ class String(Array):
 
 	def to_bg_rgb(self, r, g, b):
 		return self._ansi_apply(ANSI_BG_RGB, r, g, b)
+
+	def ljust(self, l: int, s: 'String' = " ") -> 'String':
+		return self + (s * (l - len(self)))
 
 
 ANSI_ESC = String("\033")
