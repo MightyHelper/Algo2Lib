@@ -1,4 +1,7 @@
+from myPair import Pair
+from mySort import main_sort
 from .myArray import *
+from .myLinkedList import LinkedList
 
 
 class String(Array):
@@ -73,6 +76,92 @@ class String(Array):
 
 	def to_bg_rgb(self, r, g, b):
 		return self._ansi_apply(ANSI_BG_RGB, r, g, b)
+
+	def __contains__(self, char: 'String') -> bool:
+		return self.index_of(self) != -1
+
+	def is_palindrome(self) -> bool:
+		for i in range(len(self)>>1):
+			if self[i] != self[-i-1]:
+				return False
+		return True
+
+	def most_repeated_char(self) -> 'String':
+		arr = Array(256, 0, True)
+		for i in self:
+			arr[ord(i)]+=1
+		max_i = 0
+		for i in range(1, len(arr)):
+			if arr[i] > arr[max_i]:
+				max_i = i
+		return chr(max_i)
+
+	def longest_island(self) -> int:
+		max_l = 0
+		l = 0
+		cc = String('')
+		for i in self:
+			if i == cc:
+				l += 1
+				continue
+			if max_l < l:
+				max_l = l
+			l = 1
+			cc = i
+		return max_l
+
+	def is_anagram(self, other: 'String') -> bool:
+		return main_sort(self) == main_sort(other)
+
+	def balanced(self, open: 'String', close: 'String') -> bool:
+		level = 0
+		for i in self:
+			if i == open: level += 1
+			elif i == close:
+				level -= 1
+				if level < 0: return False
+		return True
+
+	def reduce_length_adjacent(self) -> 'String':
+		l=0
+		u=1
+		le=len(self)
+		skips = LinkedList()
+		while u < le:
+			while self[l] == self[u]:
+				if l == 0:
+					skips += Pair(l, u)
+					break
+				if u == le:
+					skips += Pair(l, u)
+					break
+				l -= 1
+				u += 1
+			l = u
+			u += 1
+
+		i = 0
+		out = String('')
+		for j in skips:
+			for k in range(i, j.first):
+				out += self[k]
+			i = j.second
+		for k in range(i, le):
+			out += self[k]
+		return out
+
+
+
+	def contains_in_order(self, other: 'String') -> bool:
+		idx = 0
+		i = 0
+		l = len(other)
+		while idx < l:
+			i = self.index_of(other[idx], i)
+			if i == -1: return False
+			idx += 1
+		return True
+
 
 
 ANSI_ESC = String("\033")
