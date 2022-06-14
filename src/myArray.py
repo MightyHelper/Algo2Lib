@@ -1,7 +1,7 @@
 from typing import Optional, Union, Tuple, Type
 
-from myCopy import copy
-from myIterable import Iterable
+from .myCopy import copy
+from .myIterable import Iterable
 
 
 class Array(Iterable):

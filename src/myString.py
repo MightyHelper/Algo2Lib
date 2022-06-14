@@ -1,5 +1,5 @@
-from myPair import Pair
-from mySort import main_sort
+from .myPair import Pair
+from .mySort import main_sort
 from .myArray import *
 from .myLinkedList import LinkedList
 

@@ -1,4 +1,4 @@
-from myIterable import Iterable
+from .myIterable import Iterable
 
 
 def main_sort(iterable: Iterable) -> Iterable:
