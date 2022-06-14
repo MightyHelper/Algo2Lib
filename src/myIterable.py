@@ -12,8 +12,8 @@ class Iterable(ABC):
 	def from_iterable(iterable) -> 'Iterable':
 		pass
 
-	def index_of(self, value: any) -> int:
-		for i, val in enumerate(self):
+	def index_of(self, value: any, start: int = 0) -> int:
+		for i, val in enumerate(self, start):
 			if val == value:
 				return i
 		return -1
