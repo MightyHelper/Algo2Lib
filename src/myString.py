@@ -1,11 +1,10 @@
-from .myPair import Pair
-from .mySort import main_sort
 from .myArray import *
 from .myLinkedList import LinkedList
+from .mySort import main_sort
 
 
 class String(Array):
-	def __init__(self, str_in: Union['String', str, Array, int]):
+	def __init__(self, str_in: Union['String', str, Array, int] = ""):
 		if isinstance(str_in, str) or isinstance(str_in, String) or isinstance(str_in, Array):
 			super().__init__(len(str_in), '')
 			for idx, x in enumerate(str_in):
@@ -77,91 +76,89 @@ class String(Array):
 	def to_bg_rgb(self, r, g, b):
 		return self._ansi_apply(ANSI_BG_RGB, r, g, b)
 
-	def __contains__(self, char: 'String') -> bool:
-		return self.index_of(self) != -1
+	def __contains__(self, char: str) -> bool:
+		return self.index_of(char) != -1
 
 	def is_palindrome(self) -> bool:
-		for i in range(len(self)>>1):
-			if self[i] != self[-i-1]:
+		for i in range(len(self) >> 1):
+			if self[i] != self[-i - 1]:
 				return False
 		return True
 
 	def most_repeated_char(self) -> 'String':
 		arr = Array(256, 0, True)
 		for i in self:
-			arr[ord(i)]+=1
+			arr[ord(i)] += 1
 		max_i = 0
 		for i in range(1, len(arr)):
 			if arr[i] > arr[max_i]:
 				max_i = i
-		return chr(max_i)
+		if arr[max_i] == 0:
+			return String('')
+		return String(chr(max_i))
 
 	def longest_island(self) -> int:
-		max_l = 0
-		l = 0
-		cc = String('')
+		max_length = 0
+		island_length = 0
+		current_char = String('')
 		for i in self:
-			if i == cc:
-				l += 1
+			if i == current_char:
+				island_length += 1
 				continue
-			if max_l < l:
-				max_l = l
-			l = 1
-			cc = i
-		return max_l
+			if max_length < island_length:
+				max_length = island_length
+			island_length = 1
+			current_char = i
+		return island_length if max_length < island_length else max_length
 
 	def is_anagram(self, other: 'String') -> bool:
-		return main_sort(self) == main_sort(other)
+		return main_sort(self, ord) == main_sort(other, ord)
 
-	def balanced(self, open: 'String', close: 'String') -> bool:
+	def balanced(self, start_block: str, end_block: str) -> bool:
 		level = 0
 		for i in self:
-			if i == open: level += 1
-			elif i == close:
+			if i == start_block:
+				level += 1
+			elif i == end_block:
 				level -= 1
 				if level < 0: return False
-		return True
+		return level == 0
 
 	def reduce_length_adjacent(self) -> 'String':
-		l=0
-		u=1
-		le=len(self)
-		skips = LinkedList()
-		while u < le:
-			while self[l] == self[u]:
-				if l == 0:
-					skips += Pair(l, u)
-					break
-				if u == le:
-					skips += Pair(l, u)
-					break
-				l -= 1
-				u += 1
-			l = u
-			u += 1
-
 		i = 0
-		out = String('')
-		for j in skips:
-			for k in range(i, j.first):
-				out += self[k]
-			i = j.second
-		for k in range(i, le):
-			out += self[k]
-		return out
+		stack = LinkedList()
+		while i < len(self):
+			if not stack.is_empty() and stack[0] == self[i]:
+				stack.pop_front_()
+			else:
+				stack.push_front_(self[i])
+			i += 1
+		out_len = len(stack)
+		out = Array.of_type(out_len, str)
+		for o in range(out_len):
+			out[out_len - o - 1] = stack[o]
+		return String(out)
 
-
-
-	def contains_in_order(self, other: 'String') -> bool:
+	def contains_in_order(self, other: 'String', start_idx: int = 0) -> bool:
 		idx = 0
-		i = 0
-		l = len(other)
-		while idx < l:
+		i = start_idx
+		other_len = len(other)
+		while idx < other_len:
 			i = self.index_of(other[idx], i)
 			if i == -1: return False
 			idx += 1
 		return True
 
+	def match_with_wildcard(self, other: 'String', wildcard: str) -> bool:
+		sections = other.split(wildcard)
+		section_index = 0
+		string_index = 0
+		while section_index < len(sections):
+			string_index = self.naive_str_index_of(sections[section_index], string_index)
+			if string_index == -1:
+				return False
+			section_index += 1
+		return True
 
 
 ANSI_ESC = String("\033")

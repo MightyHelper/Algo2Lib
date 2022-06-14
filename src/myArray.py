@@ -106,7 +106,7 @@ class Array(Iterable):
 	def __setitem__(self, index: int, value: any) -> None:
 		if index > self.size:
 			raise IndexError(f"Index out of bounds {index} > {self.size}")
-		elif type(value) != self.type and value is not None:
+		elif not isinstance(value, self.type) and value is not None:
 			raise ValueError(f"Expected a {self.type} but got a {type(value)}")
 		self.data[index] = value
 
@@ -117,15 +117,7 @@ class Array(Iterable):
 		return self.size
 
 	def __iter__(self):
-		self.__iter = 0
-		return self
-
-	def __next__(self):
-		if self.__iter >= self.size:
-			raise StopIteration
-		val = self[self.__iter]
-		self.__iter += 1
-		return val
+		return ArrayIterator(self)
 
 	def __eq__(self, other: object) -> bool:
 		if not isinstance(other, type(self)):
@@ -147,3 +139,31 @@ class Array(Iterable):
 		for idx, x in enumerate(iterable):
 			out[idx] = x
 		return out
+
+	def split(self, value: any) -> 'Array':
+		out = self.of_type(0, Array)
+		accumulator = self.new_array_of_same_type(0)
+		for i in self:
+			if i == value:
+				_, out = out.push_back(accumulator)
+				accumulator = self.new_array_of_same_type(0)
+			else:
+				_, accumulator = accumulator.push_back(i)
+		if not accumulator.is_empty():
+			_, out = out.push_back(accumulator)
+		return out
+
+
+class ArrayIterator:
+	def __init__(self, array: Array):
+		self.array = array
+		self.index = 0
+
+	def __iter__(self):
+		return self
+
+	def __next__(self):
+		if self.index >= self.array.size:
+			raise StopIteration
+		self.index += 1
+		return self.array[self.index - 1]
