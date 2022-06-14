@@ -1,4 +1,3 @@
-import time
 import unittest
 import traceback
 
@@ -54,6 +53,7 @@ class TestMyAVL(unittest.TestCase):
 			traceback.print_tb(e.__traceback__)
 			raise e
 		print(f"{clash_count=}")
+
 
 if __name__ == '__main__':
 	unittest.main()

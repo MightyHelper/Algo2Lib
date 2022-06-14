@@ -1,9 +1,9 @@
 from typing import Union
 
-from .myArray import Array
-from .myCopy import copy
-from .myLinkedList import LinkedList
-from .myPair import Pair
+from myArray import Array
+from myCopy import copy
+from myLinkedList import LinkedList
+from myPair import Pair
 
 
 class AVL:
@@ -166,7 +166,7 @@ class AVLNode:
 		if zero: zero.attach(pivot, x)
 		pivot.attach(root, direction)
 		# print(pivot.in_order()); pivot.post_rotate_get_bf(direction)
-		print(pivot.treed());
+		print(pivot.treed())
 		pivot.calculate_bf()
 		print(pivot.treed())
 		return pivot

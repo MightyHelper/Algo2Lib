@@ -1,4 +1,4 @@
-from .myArray import *
+from myArray import *
 
 
 class String(Array):
