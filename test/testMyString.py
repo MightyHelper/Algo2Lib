@@ -1,4 +1,5 @@
 import unittest
+from src.myArray import Array
 
 from src.myString import String
 
@@ -97,17 +98,66 @@ class TestMyString(unittest.TestCase):
 
 	def test_ej8(self):
 		"""String contained"""
-		# self.assertTrue(String("").contains_in_order(String("")))
-		# self.assertTrue(String("aaafffmmmarillzzzllhooo").contains_in_order(String("amarillo")))
+		self.assertTrue(String("").contains_in_order(String("")))
+		self.assertTrue(String("aaafffmmmarillzzzllhooo").contains_in_order(String("amarillo")))
 		self.assertFalse(String("aaafffmmmarrrilzzzhooo").contains_in_order(String("amarillo")))
 
 	def test_ej9(self):
 		"""Match with wildcards"""
 		self.assertTrue(String("").match_with_wildcard(String(""), "♢"))
 		self.assertTrue(String("cabccbacbacab").match_with_wildcard(String("ab♢ba♢c"), "♢"))
+		self.assertTrue(String("cabcccbacbacab").match_with_wildcard(String("ab♢ba♢c"), "♢"))
 		self.assertTrue(String("ma--tc0hme").match_with_wildcard(String("ma♢tc♢hme"), "♢"))
 		self.assertFalse(String("ma--tc0hme").match_with_wildcard(String("ma♢tc♢hme"), " "))
 		self.assertFalse(String("ab--ba-d").match_with_wildcard(String("ab♢ba♢c"), "♢"))
+
+	def test_ej10(self):
+		"""P = aabab
+		T = aaababaabaababaab
+		A = [2 3 3 5 1
+		     1 1 4 1 1]
+		Transita por los estados
+		1a2a3a3b4a5b1a2a3b4a5a1b1a2b1a2a3b4
+		------------!----------------------
+		"""
+		pass
+
+	def test_ej11(self):
+		"""Mayor prefix"""
+		self.assertEqual(String("").longest_prefix(String("")), String(""));
+		self.assertEqual(String("Hello").longest_prefix(String("lo")), String("lo"));
+		self.assertEqual(String("Hello").longest_prefix(String("llo")), String("llo"));
+		self.assertEqual(String("Helloeloh").longest_prefix(String("elov")), String("elo"));
+
+	def test_kmp(self):
+		self.assertEqual(String("ababaaba").compile_kmp(), Array.from_iterable([0,0,1,2,3,1,2,3]))
+
+	def test_starts_width(self):
+		self.assertTrue(String("abcd").starts_with(String("")))
+		self.assertTrue(String("abcd").starts_with(String("abcd")))
+		self.assertTrue(String("abcd").starts_with(String("abc")))
+		self.assertTrue(String("abcd").starts_with(String("ab")))
+		self.assertTrue(String("abcd").starts_with(String("a")))
+		self.assertFalse(String("abcd").starts_with(String("abcde")))
+		self.assertFalse(String("abcd").starts_with(String("d")))
+		self.assertFalse(String("abcd").starts_with(String(" ")))
+		self.assertTrue(String("").starts_with(String("")))
+
+	def test_automata(self):
+		self.assertEqual(String("abcdacbdabbde").compile_automata(String("abcde")),
+			Array.from_iterable([
+				Array.from_iterable([1,1,1,1,5,1,1,1,9,1 ,1 ,1 ,1 ]),
+				Array.from_iterable([0,2,0,0,0,2,7,0,0,10,11,0 ,0 ]),
+				Array.from_iterable([0,0,3,0,0,6,0,0,0,0 ,3 ,0 ,0 ]),
+				Array.from_iterable([0,0,0,4,0,0,0,8,0,0 ,0 ,12,0 ]),
+				Array.from_iterable([0,0,0,0,0,0,0,0,0,0 ,0 ,0 ,13]),
+			])
+		)
+
+	def test_ej12(self):
+		pass
+		# self.assertEqual()
+
 
 	def test_indexof(self):
 		"""Index of"""

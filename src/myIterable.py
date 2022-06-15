@@ -13,6 +13,8 @@ class Iterable(ABC):
 		pass
 
 	def index_of(self, value: any, start: int = 0) -> int:
+		if len(self) == 0:
+			return -1
 		start = self.parse_index(start, None)
 		iterator = enumerate(self)
 		for o in range(start):
