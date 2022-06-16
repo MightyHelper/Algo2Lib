@@ -85,7 +85,8 @@ class Array(Iterable):
 		self.type = type(init_value)
 
 	def get_slice(self, key: slice) -> Optional['Array']:
-		start, stop = self.parse_index(key.start, 0), self.parse_index(key.stop, self.size)
+		start = self.parse_index(key.start, 0)
+		stop = self.parse_index(key.stop, self.size)
 		step = self.parse_step(key.step, 1)
 		if start > stop:
 			raise IndexError(f"Cannot iterate from {start} to {stop}.")

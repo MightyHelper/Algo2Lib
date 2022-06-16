@@ -49,10 +49,10 @@ class Iterable(ABC):
 				return default
 		if index < 0:
 			index = len(self) + index
-		if default == len(self) and index == default:
+		if index == default:
 			return default
-		if (index >= len(self) or index < 0):
-			raise IndexError(f"{index=} not available in list of length {len(self)}.")
+		if index >= len(self) or index < 0:
+			raise IndexError(f"{index=} not available in list of length {len(self)} D={default}.")
 		return index
 
 	def __len__(self) -> int:

@@ -188,12 +188,26 @@ class String(Array):
 			return False
 		return self[:len(other)] == other
 
+	def ends_with(self, other: 'String') -> bool:
+		if len(other) > len(self):
+			return False
+		return self[len(self)-len(other):] == other
+
 	def compile_automata(self, vocabulary: 'String') -> Array:
 		out = Array(len(self), Array(len(vocabulary), 0, True), True)
-		for j in range(len(self)):
+		for j in range(1, len(self)):
 			for i in range(len(vocabulary)):
-				for k in range(j):
-					print(self[:j], self[j-k:j])
+				for k in range(0, j+1):
+					l=j-k
+					if self[l:j]+vocabulary[i]==self[:k+1]:
+						out[j-1][i] = k+1
+		# for i in range(len(vocabulary)):
+		# 	if vocabulary[i] == self[0]:
+		# 		out[len(self)-1][i] = 1
+		# 	for k in range(1, len(self)):
+		# 		if self[-k:]+vocabulary[i]==self[:k+1]:
+		# 			out[len(self)-1][i] = k+1
+
 		print()
 		for x in out:
 			print(x)
