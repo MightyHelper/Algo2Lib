@@ -184,6 +184,18 @@ class String(Array):
 				out[i] = 0
 		return out
 
+	def kmp_search(self, other: 'String') -> int:
+		pattern = other.compile_kmp()
+		matched = 0
+		for i in range(len(self)):
+			if self[i] == other[matched]:
+				matched += 1
+				if matched == len(other):
+					return i - matched + 1
+			else:
+				matched = pattern[matched]
+		return -1
+
 	def starts_with(self, other: 'String') -> bool:
 		if len(other) > len(self):
 			return False
