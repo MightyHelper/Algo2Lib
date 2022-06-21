@@ -5,6 +5,19 @@ from .myIterable import Iterable
 
 
 class Array(Iterable):
+	def concat(self, other: 'Iterable') -> 'Iterable':
+		out = self.new_array_of_same_type(len(self) + len(other))
+		i = 0
+		for x in self:
+			out[i] = x
+			i += 1
+		for x in other:
+			if not isinstance(x, self.type):
+				raise ValueError(f"Cannot concatenate iterable into the array because of type mismatch ({self.type} vs {type(x)}).")
+			out[i] = x
+			i += 1
+		return out
+
 	data = []
 
 	def pop_index(self, index: int) -> Tuple[any, 'Iterable']:
@@ -13,7 +26,7 @@ class Array(Iterable):
 			new_array[i] = self[i if i < index else i + 1]
 		return self[index], new_array
 
-	def new_array_of_same_type(self, length):
+	def new_array_of_same_type(self, length: int) -> 'Array':
 		new_array = Array(length)
 		new_array.type = self.type
 		return new_array
@@ -104,7 +117,7 @@ class Array(Iterable):
 		return val
 
 	def __eq__(self, other: object) -> bool:
-		if not isinstance(other, Array):
+		if not isinstance(other, type(self)):
 			return False
 		if other.type != self.type:
 			return False
