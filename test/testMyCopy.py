@@ -20,8 +20,28 @@ class TestMyCopy(unittest.TestCase):
 			self.assertFull(x)
 
 	def test_dicts(self):
-		for x in ({"a": "b", 1: "ccc", (1, 2, 3): 12, "aa": [123], ("a", "z"): "k"},):
+		for x in ({"a": "b", 1: "ccc", (1, 2, 3): 12, "aa": [123], ("a", "z"): "k"}, {"a": {"a": {"a": 1}}}):
 			self.assertFull(x)
+
+	def test_manual_copy(self):
+		class J:
+			val = 123
+			mm = "XXX"
+
+			def __str__(self):
+				return f"J-{self.val}{self.mm}"
+
+		class T:
+			v = J()
+			k = 2
+
+			def __str__(self):
+				return f"T-{self.v}{self.k}"
+
+		t = T()
+		t.k = 123
+		self.assertEqual(str(t), str(mCopy.copy(t)))
+		self.assertFalse(t is mCopy.copy(t))
 
 
 if __name__ == '__main__':
