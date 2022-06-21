@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Optional, Tuple
 
-from src.myCopy import copy
+from .myCopy import copy
 
 
 class Iterable(ABC):
