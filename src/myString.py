@@ -144,7 +144,7 @@ class String(Array):
 		i = start_idx
 		other_len = len(other)
 		while idx < other_len:
-			i = self.index_of(other[idx], i)
+			i = self.index_of(other[idx], i+1)
 			if i == -1: return False
 			idx += 1
 		return True
@@ -159,6 +159,78 @@ class String(Array):
 				return False
 			section_index += 1
 		return True
+
+	def naive_longest_prefix(self, other: 'String') -> 'String':
+		if len(other) == 0:
+			return String("")
+		if len(self) == 0:
+			return String("")
+		for i in range(0,len(other)):
+			res = self.naive_str_index_of(other[:len(other)-i])
+			if res != -1:
+				return other[:len(other)-i]
+		return String("")
+
+	def compile_kmp(self) -> Array:
+		out = Array.of_type(len(self), int)
+		out[0] = 0
+		for i in range(1, len(self)):
+			if self[i] == self[out[i-1]]:
+				out[i] = out[i-1]+1
+			elif self[i] == self[0]:
+				out[i] = 1
+			else:
+				out[i] = 0
+		return out
+
+	def starts_with(self, other: 'String') -> bool:
+		if len(other) > len(self):
+			return False
+		return self[:len(other)] == other
+
+	def compile_automata(self, vocabulary: 'String') -> Array:
+		out = Array(len(self), Array(len(vocabulary), 0, True), True)
+		for j in range(len(self)):
+			for i in range(len(vocabulary)):
+				for k in range(j):
+					print(self[:j], self[j-k:j])
+		print()
+		for x in out:
+			print(x)
+		return out
+
+	def compile_automata2(self, vocabulary: 'String') -> Array:
+		out = Array(len(self), Array(len(vocabulary), 0), True)
+		for j in range(len(self)):
+			for i in range(len(vocabulary)):
+				k = min(len(self)+1, j+2)-1
+				while (self[:j]+vocabulary[i]).starts_with(self[:k]) and k > 0:
+					k -= 1
+				out[j][i] = k
+		print()
+		for x in out:
+			print(x)
+		return out
+
+
+
+	def longest_prefix(self, other: 'String') -> 'String':
+		if len(other) == 0:
+			return String("")
+		prefix_len = 0
+		max_prefix = -1
+		other_p = other.compile_kmp()
+		for i in self:
+			if i != other[prefix_len]:
+				if prefix_len > max_prefix:
+					max_prefix = prefix_len
+				prefix_len = other_p[prefix_len]
+			if i == other[prefix_len]:
+				prefix_len += 1
+		if prefix_len > max_prefix:
+			max_prefix = prefix_len
+		return other[:max_prefix]
+
 
 
 ANSI_ESC = String("\033")
