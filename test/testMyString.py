@@ -124,13 +124,13 @@ class TestMyString(unittest.TestCase):
 
 	def test_ej11(self):
 		"""Mayor prefix"""
-		self.assertEqual(String("").longest_prefix(String("")), String(""));
-		self.assertEqual(String("Hello").longest_prefix(String("lo")), String("lo"));
-		self.assertEqual(String("Hello").longest_prefix(String("llo")), String("llo"));
-		self.assertEqual(String("Helloeloh").longest_prefix(String("elov")), String("elo"));
+		self.assertEqual(String("").longest_prefix(String("")), String(""))
+		self.assertEqual(String("Hello").longest_prefix(String("lo")), String("lo"))
+		self.assertEqual(String("Hello").longest_prefix(String("llo")), String("llo"))
+		self.assertEqual(String("Helloeloh").longest_prefix(String("elov")), String("elo"))
 
 	def test_kmp(self):
-		self.assertEqual(String("ababaaba").compile_kmp(), Array.from_iterable([0,0,1,2,3,1,2,3]))
+		self.assertEqual(String("ababaaba").compile_kmp(), Array.from_iterable([0, 0, 1, 2, 3, 1, 2, 3]))
 
 	def test_starts_width(self):
 		self.assertTrue(String("abcd").starts_with(String("")))
@@ -144,32 +144,61 @@ class TestMyString(unittest.TestCase):
 		self.assertTrue(String("").starts_with(String("")))
 
 	def test_automata(self):
-		self.assertEqual(String("ababaaba").compile_automata(String("ab")),
-			Array.from_iterable([  #  a,b,a,b,a,a,b,a
-				Array.from_iterable([1,0]),
-				Array.from_iterable([1,2]),
-				Array.from_iterable([3,0]),
-				Array.from_iterable([1,4]),
-				Array.from_iterable([5,0]),
-				Array.from_iterable([6,4]),
-				Array.from_iterable([1,7]),
-				Array.from_iterable([8,0]),
-			])
+		self.assertEqual(Array.from_iterable([  # a,b,a,b,a,a,b,a
+			Array.from_iterable([1, 0]),
+			Array.from_iterable([1, 2]),
+			Array.from_iterable([3, 0]),
+			Array.from_iterable([1, 4]),
+			Array.from_iterable([5, 0]),
+			Array.from_iterable([6, 4]),
+			Array.from_iterable([1, 7]),
+			Array.from_iterable([8, 0]),
+		]),
+			String("ababaaba").compile_automata(String("ab"))
 		)
-		# self.assertEqual(String("abcdacbdabbde").compile_automata(String("abcde")),
-		# 	Array.from_iterable([
-		# 		Array.from_iterable([1,1,1,1,5,1,1,1,9,1 ,1 ,1 ,1 ]),
-		# 		Array.from_iterable([0,2,0,0,0,2,7,0,0,10,11,0 ,0 ]),
-		# 		Array.from_iterable([0,0,3,0,0,6,0,0,0,0 ,3 ,0 ,0 ]),
-		# 		Array.from_iterable([0,0,0,4,0,0,0,8,0,0 ,0 ,12,0 ]),
-		# 		Array.from_iterable([0,0,0,0,0,0,0,0,0,0 ,0 ,0 ,13]),
-		# 	])
-		# )
+		self.assertEqual(Array.from_iterable([
+			Array.from_iterable([1, 0, 0, 0, 0]),
+			Array.from_iterable([1, 2, 0, 0, 0]),
+			Array.from_iterable([1, 0, 3, 0, 0]),
+			Array.from_iterable([1, 0, 0, 4, 0]),
+			Array.from_iterable([5, 0, 0, 0, 0]),
+			Array.from_iterable([1, 2, 6, 0, 0]),
+			Array.from_iterable([1, 7, 0, 0, 0]),
+			Array.from_iterable([1, 0, 0, 8, 0]),
+			Array.from_iterable([9, 0, 0, 0, 0]),
+			Array.from_iterable([1, 10, 0, 0, 0]),
+			Array.from_iterable([1, 11, 3, 0, 0]),
+			Array.from_iterable([1, 0, 0, 12, 0]),
+			Array.from_iterable([1, 0, 0, 0, 13]),
+		]),
+			String("abcdacbdabbde").compile_automata(String("abcde"))
+		)
 
 	def test_ej12(self):
-		pass
-		# self.assertEqual()
+		"""use automata"""
+		self.assertEqual(3, String("ababaaba").count_automata(String("ab").compile_automata(String("ab")), String("ab")))
+		# Not supported by the compilation, need to special case
+		# self.assertEqual(2, String("ababa").count_automata(String("aba").compile_automata(String("ab")), String("ab")))
+		self.assertEqual(1, String("ababa").count_automata(String("aba").compile_automata(String("ab")), String("aba")))
 
+	def test_ej13(self):
+		self.assertEqual(ord('a'), String("a").rabin_karp_compile())
+		self.assertEqual(ord('b'), String("b").rabin_karp_compile())
+		self.assertEqual(ord('a')*256+ord('b'), String("ab").rabin_karp_compile())
+		self.assertEqual(ord('c')*256+ord('d'), String("cd").rabin_karp_compile())
+
+		self.assertEqual(0, String("abcd").rabin_karp_search(String("a")))
+		self.assertEqual(0, String("abcd").rabin_karp_search(String("ab")))
+		self.assertEqual(0, String("abcd").rabin_karp_search(String("abcd")))
+		self.assertEqual(1, String("abcd").rabin_karp_search(String("bcd")))
+		self.assertEqual(2, String("abcd").rabin_karp_search(String("cd")))
+		self.assertEqual(-1, String("abcd").rabin_karp_search(String("f")))
+
+	def test_ej14(self):
+		pass
+
+	def test_ej15(self):
+		pass
 
 	def test_indexof(self):
 		"""Index of"""
@@ -182,6 +211,7 @@ class TestMyString(unittest.TestCase):
 		self.assertEqual(String("aab").index_of("a", 2), -1)
 		self.assertEqual(String("1234567890")[0:3], String("123"))
 		self.assertEqual(String("123")[0:3], String("123"))
+
 
 if __name__ == '__main__':
 	unittest.main()

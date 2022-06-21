@@ -99,7 +99,7 @@ class Array(Iterable):
 		if isinstance(key, slice):
 			return self.get_slice(key)
 		if isinstance(key, int):
-			if key > self.size:
+			if key >= self.size:
 				raise IndexError(f"Index out of bounds {key} > {self.size}")
 			return self.data[key]
 		raise IndexError(f"Unknown index type {type(key)}.")

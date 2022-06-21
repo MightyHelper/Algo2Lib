@@ -1,4 +1,5 @@
 from .myArray import *
+from .myHash import AsciiHash, SlidingHash, MultiCompose
 from .myLinkedList import LinkedList
 from .mySort import main_sort
 
@@ -144,7 +145,7 @@ class String(Array):
 		i = start_idx
 		other_len = len(other)
 		while idx < other_len:
-			i = self.index_of(other[idx], i+1)
+			i = self.index_of(other[idx], i + 1)
 			if i == -1: return False
 			idx += 1
 		return True
@@ -165,18 +166,18 @@ class String(Array):
 			return String("")
 		if len(self) == 0:
 			return String("")
-		for i in range(0,len(other)):
-			res = self.naive_str_index_of(other[:len(other)-i])
+		for i in range(0, len(other)):
+			res = self.naive_str_index_of(other[:len(other) - i])
 			if res != -1:
-				return other[:len(other)-i]
+				return other[:len(other) - i]
 		return String("")
 
 	def compile_kmp(self) -> Array:
 		out = Array.of_type(len(self), int)
 		out[0] = 0
 		for i in range(1, len(self)):
-			if self[i] == self[out[i-1]]:
-				out[i] = out[i-1]+1
+			if self[i] == self[out[i - 1]]:
+				out[i] = out[i - 1] + 1
 			elif self[i] == self[0]:
 				out[i] = 1
 			else:
@@ -191,15 +192,15 @@ class String(Array):
 	def ends_with(self, other: 'String') -> bool:
 		if len(other) > len(self):
 			return False
-		return self[len(self)-len(other):] == other
+		return self[len(self) - len(other):] == other
 
 	def compile_automata(self, vocabulary: 'String') -> Array:
 		out = Array(len(self), Array(len(vocabulary), 0, True), True)
 		for j in range(len(self)):
 			for i in range(len(vocabulary)):
-				for k in range(j,-1,-1):
-					if self[j-k:j]+vocabulary[i]==self[:k+1]:
-						out[j][i] = k+1
+				for k in range(j, -1, -1):
+					if self[j - k:j] + vocabulary[i] == self[:k + 1]:
+						out[j][i] = k + 1
 						break
 		return out
 
@@ -207,8 +208,8 @@ class String(Array):
 		out = Array(len(self), Array(len(vocabulary), 0), True)
 		for j in range(len(self)):
 			for i in range(len(vocabulary)):
-				k = min(len(self)+1, j+2)-1
-				while (self[:j]+vocabulary[i]).starts_with(self[:k]) and k > 0:
+				k = min(len(self) + 1, j + 2) - 1
+				while (self[:j] + vocabulary[i]).starts_with(self[:k]) and k > 0:
 					k -= 1
 				out[j][i] = k
 		print()
@@ -216,15 +217,16 @@ class String(Array):
 			print(x)
 		return out
 
-
-
 	def longest_prefix(self, other: 'String') -> 'String':
+		print(self, other)
 		if len(other) == 0:
 			return String("")
 		prefix_len = 0
 		max_prefix = -1
 		other_p = other.compile_kmp()
 		for i in self:
+			if prefix_len == len(other):
+				return other
 			if i != other[prefix_len]:
 				if prefix_len > max_prefix:
 					max_prefix = prefix_len
@@ -235,7 +237,37 @@ class String(Array):
 			max_prefix = prefix_len
 		return other[:max_prefix]
 
+	def count_automata(self, automata: Array, vocabulary: 'String') -> int:
+		if len(automata) == 0: return 0
+		if len(self) == 0: return 0
+		if len(self) < len(automata): return 0
+		state = 0
+		count = 0
+		for i in automata:
+			print(i)
+		print()
+		print(self)
+		for i in self:
+			print(state, self)
+			state = automata[state][vocabulary.index_of(i)]
+			if state == len(automata):
+				count += 1
+				state = 0
+		return count
 
+	def rabin_karp_compile(self) -> int:
+		slide = SlidingHash(len(self), 256, MultiCompose(AsciiHash()).hash(self))
+		return next(iter(slide))
+
+	def rabin_karp_search(self, other: 'String') -> int:
+		"""For O(1) we can use python's hash function"""
+		compiled = other.rabin_karp_compile()
+		slide = SlidingHash(len(other), 256, MultiCompose(AsciiHash()).hash(self))
+		for i, h in enumerate(slide):
+			print(h, compiled, i)
+			if h == compiled:
+				return i
+		return -1
 
 ANSI_ESC = String("\033")
 ANSI_ESCAPE = ANSI_ESC + String("[")
