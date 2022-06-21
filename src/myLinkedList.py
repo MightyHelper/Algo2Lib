@@ -1,7 +1,7 @@
 from typing import Union, Optional, Tuple
 
-from .myCopy import copy
-from .myIterable import Iterable
+from myCopy import copy
+from myIterable import Iterable
 
 
 class LinkedListNode:
@@ -118,7 +118,8 @@ class LinkedList(Iterable):
 		return self.pop_back_().value, self
 
 	def get_slice(self, key: slice) -> Optional['LinkedList']:
-		start, stop, step = self.parse_index(key.start, 0), self.parse_index(key.stop, self.size), self.parse_step(key.step, 1)
+		start, stop = self.parse_index(key.start, 0), self.parse_index(key.stop, self.size)
+		step = self.parse_step(key.step, 1)
 		if start > stop:
 			raise IndexError(f"Cannot iterate from {start} to {stop}.")
 		out_list_head = LinkedListNode()

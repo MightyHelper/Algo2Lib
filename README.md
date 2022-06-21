@@ -140,3 +140,51 @@ Map --|> FixedMap
 Array .. ArrayWrapper
 ArrayWrapper --|> String
 ```
+```mermaid
+classDiagram
+class Map~T,U~{
+__len__()
+is_empty() boolean
+__getitem__(T) U
+__setitem__(T, U) None
+__iter__() Iterator
+__next__() T
+}
+class IntMap~T~ extends Map~int, T~{
+sub_intmap(int, int, int) IntMap
+}
+class Array~T~ extends IntMap~T~{
+
+}
+class VariableLenghtIntMap~T~ extends IntMap~T~{
+__add__(IntMap|T) VariableLenghtIntMap
+__mul__(int) VariableLenghtIntMap
+}
+class LinkedList~T~ extends VariableLenghtIntMap~T~{
+
+}
+class ArrayWrapper~T~ extends VariableLenghtIntMap~T~{
+
+}
+class String extends VariableLenghtIntMap~T~{
+
+}
+class HashMap~T, U~ extends Map~T, U~{
+keys() SingleLinkedList~T~
+}
+class DynamicMap~T, U~ extends HashMap~T, U~{
+
+}
+class FixedMap~T, U~ extends HashMap~T, U~{
+
+}
+class AVL~T, U~ extends HashMap~T, U~{
+
+}
+class HashSet~T~ extends HashMap~T, boolean~{
+
+}
+class Trie extends HashSet~String~{
+
+}
+```
