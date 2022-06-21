@@ -195,16 +195,12 @@ class String(Array):
 
 	def compile_automata(self, vocabulary: 'String') -> Array:
 		out = Array(len(self), Array(len(vocabulary), 0, True), True)
-		for j in range(0, len(self)):
+		for j in range(len(self)):
 			for i in range(len(vocabulary)):
-				for k in range(0, j+1):
-					l=j-k
-					if self[l:j]+vocabulary[i]==self[:k+1]:
+				for k in range(j,-1,-1):
+					if self[j-k:j]+vocabulary[i]==self[:k+1]:
 						out[j][i] = k+1
-
-		print()
-		for x in out:
-			print(x)
+						break
 		return out
 
 	def compile_automata2(self, vocabulary: 'String') -> Array:
