@@ -13,9 +13,27 @@ class Iterable(ABC):
 		pass
 
 	def index_of(self, value: any, start: int = 0) -> int:
-		for i, val in enumerate(self, start):
+		start = self.parse_index(start, None)
+		iterator = enumerate(self)
+		for o in range(start):
+			next(iterator)
+		for i, val in iterator:
 			if val == value:
 				return i
+		return -1
+
+	def naive_str_index_of(self, other: 'Iterable', start: int = 0):
+		if len(other) > len(self):
+			return -1
+		if len(other) == 0:
+			return 0
+		i = start
+		while i < len(self):
+			if i == -1:
+				return -1
+			if i + len(other) <= len(self) and other == self[i:i + len(other)]:
+				return i
+			i = self.index_of(other[0], i + 1)
 		return -1
 
 	def is_empty(self) -> bool:
@@ -29,7 +47,9 @@ class Iterable(ABC):
 				return default
 		if index < 0:
 			index = len(self) + index
-		if index >= len(self) or index < 0:
+		if default == len(self) and index == default:
+			return default
+		if (index >= len(self) or index < 0):
 			raise IndexError(f"{index=} not available in list of length {len(self)}.")
 		return index
 
@@ -54,10 +74,6 @@ class Iterable(ABC):
 
 	@abstractmethod
 	def __iter__(self) -> any:
-		pass
-
-	@abstractmethod
-	def __next__(self) -> any:
 		pass
 
 	@abstractmethod
@@ -96,7 +112,7 @@ class Iterable(ABC):
 		out = ""
 		for i in self:
 			out += str(i) + joiner
-		return out[:len(out)-len(joiner)]
+		return out[:len(out) - len(joiner)]
 
 	def __str__(self):
 		return f"[{self.join()}]"
@@ -117,3 +133,7 @@ class Iterable(ABC):
 
 	def __repr__(self):
 		return f"[{type(self).__name__}:{self}]"
+
+	@staticmethod
+	def split(self, value: any) -> 'Iterable':
+		pass

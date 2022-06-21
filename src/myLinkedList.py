@@ -145,15 +145,7 @@ class LinkedList(Iterable):
 		self.get_node(index).value = value
 
 	def __iter__(self):
-		self.__iter = self.root
-		return self
-
-	def __next__(self):
-		if self.__iter is None:
-			raise StopIteration
-		out = self.__iter
-		self.__iter = self.__iter.next
-		return out.value
+		return LinkedListIterator(self)
 
 	def re_compute_size(self) -> int:
 		self.size = 0
@@ -209,3 +201,33 @@ class LinkedList(Iterable):
 		for i in self:
 			out.push_next(i)
 		return LinkedList(out.next, len(self))
+
+	def split(self, value: any) -> 'LinkedList':
+		out = LinkedList()
+		accumulator = LinkedList()
+		for i in self:
+			if i == value:
+				_, out = out.push_back(accumulator)
+				accumulator = LinkedList()
+			else:
+				_, accumulator = accumulator.push_back(i)
+		if not accumulator.is_empty():
+			_, out = out.push_back(accumulator)
+		return out
+
+class LinkedListIterator:
+	def __init__(self, linked_list: LinkedList):
+		self.linked_list = linked_list
+		self.node = linked_list.root
+		self.index = 0
+
+	def __iter__(self):
+		return self
+
+	def __next__(self):
+		if self.node is None:
+			raise StopIteration
+		out = self.node.value
+		self.node = self.node.next
+		self.index += 1
+		return out
