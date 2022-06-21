@@ -1,20 +1,83 @@
+from typing import Optional, Union, Tuple
+
 from .myCopy import copy
+from .myIterable import Iterable
 
 
-class Array:
+class Array(Iterable):
 	data = []
 
-	def __init__(self, size: int, init_value: any = 0, pre_fill: bool = False) -> None:
+	def pop_index(self, index: int) -> Tuple[any, 'Iterable']:
+		new_array = self.new_array_of_same_type(len(self) - 1)
+		for i in range(len(self) - 1):
+			new_array[i] = self[i if i < index else i + 1]
+		return self[index], new_array
+
+	def new_array_of_same_type(self, length):
+		new_array = Array(length)
+		new_array.type = self.type
+		return new_array
+
+	def push_before_index(self, index: int, value: any) -> Tuple[any, 'Iterable']:
+		new_array = self.new_array_of_same_type(len(self) + 1)
+		new_array[index] = value
+		for i in range(len(self)):
+			new_array[i if i < index else i + 1] = self[i]
+		return value, new_array
+
+	def push_after_index(self, index: int, value: any) -> Tuple[any, 'Iterable']:
+		return self.push_before_index(index + 1, value)
+
+	def push_front(self, value) -> Tuple[any, 'Iterable']:
+		new_array = self.new_array_of_same_type(len(self) + 1)
+		new_array[0] = value
+		for i in range(len(self)):
+			new_array[i + 1] = self[i]
+		return value, new_array
+
+	def push_back(self, value) -> Tuple[any, 'Iterable']:
+		new_array = self.new_array_of_same_type(len(self) + 1)
+		new_array[-1] = value
+		for i in range(len(self)):
+			new_array[i] = self[i]
+		return value, new_array
+
+	def pop_front(self) -> Tuple[any, 'Iterable']:
+		new_array = self.new_array_of_same_type(len(self) - 1)
+		for i in range(len(self) - 1):
+			new_array[i] = self[i + 1]
+		return self[0], new_array
+
+	def pop_back(self) -> Tuple[any, 'Iterable']:
+		new_array = self.new_array_of_same_type(len(self) - 1)
+		for i in range(1, len(self)):
+			new_array[i - 1] = self[i]
+		return self[-1], new_array
+
+	def __init__(self, size: int, init_value: any = None, pre_fill: bool = False) -> None:
 		self.size = size
 		if size < 0:
 			raise ValueError("Negative size doesn't make sense")
 		self.data = [copy(init_value) for _ in range(0, size)] if pre_fill else [None for _ in range(0, size)]
 		self.type = type(init_value)
 
-	def __getitem__(self, index: int) -> any:
-		if index > self.size:
-			raise IndexError(f"Index out of bounds {index} > {self.size}")
-		return self.data[index]
+	def get_slice(self, key: slice) -> Optional['Array']:
+		start, stop, step = self.parse_index(key.start, 0), self.parse_index(key.stop, self.size), self.parse_step(key.step, 1)
+		if start > stop:
+			raise IndexError(f"Cannot iterate from {start} to {stop}.")
+		out_array = self.new_array_of_same_type(int(((stop - start) / step) + 0.99999))
+		for i in range(len(out_array)):
+			out_array[i] = self[i * step + start]
+		return out_array
+
+	def __getitem__(self, key: Union[slice, int]) -> any:
+		if isinstance(key, slice):
+			return self.get_slice(key)
+		if isinstance(key, int):
+			if key > self.size:
+				raise IndexError(f"Index out of bounds {key} > {self.size}")
+			return self.data[key]
+		raise IndexError(f"Unknown index type {type(key)}.")
 
 	def __setitem__(self, index: int, value: any) -> None:
 		if index > self.size:

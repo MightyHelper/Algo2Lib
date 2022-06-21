@@ -14,10 +14,10 @@ class TestMyLinkedList(unittest.TestCase):
 		arr.push_front(1)
 		arr.push_back(7)
 		self.assertEqual([*arr], [*range(1, 8)])
-		self.assertEqual(arr.pop_front().value, 1)
-		self.assertEqual(arr.pop_front().value, 2)
-		self.assertEqual(arr.pop_back().value, 7)
-		self.assertEqual(arr.pop_back().value, 6)
+		self.assertEqual(arr.pop_front()[0], 1)
+		self.assertEqual(arr.pop_front()[0], 2)
+		self.assertEqual(arr.pop_back()[0], 7)
+		self.assertEqual(arr.pop_back()[0], 6)
 		self.assertEqual(len(arr), 3)
 		self.assertEqual(str(arr), str([*range(3, 6)]))
 
@@ -73,22 +73,6 @@ class TestMyLinkedList(unittest.TestCase):
 		with self.assertRaises(ValueError):
 			# noinspection PyTypeChecker
 			mLinkedList.LinkedList.from_iterable([1, 2, 3]).pop_index(None)
-
-	def test_indices(self):
-		arr = mLinkedList.LinkedList.from_iterable([1, 2, 3, 10, 11, 112, 1431])
-		self.assertEqual(arr.index_of(2), 1)
-		self.assertEqual(arr.index_of(1), 0)
-		self.assertEqual(arr.index_of(4), -1)
-		self.assertEqual(arr.pop_index(1).value, 2)
-		self.assertEqual(arr.pop_index(1).value, 3)
-		self.assertEqual(arr.index_of(2), -1)
-		self.assertEqual(arr.push_after_index(2, 12345).value, 12345)
-		self.assertEqual(arr[3], 12345)
-		self.assertEqual(arr.push_before_index(2, 121212).value, 121212)
-		self.assertEqual(arr[2], 121212)
-		self.assertEqual(arr.pop_index(0).value, 1)
-		self.assertEqual(arr.push_before_index(0, 1).value, 1)
-		self.assertEqual(arr[0], 1)
 
 	def test_copy(self):
 		arr = mLinkedList.LinkedList.from_iterable([1, 2, 3, 4, 5, 65])
