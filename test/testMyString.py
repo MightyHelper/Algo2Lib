@@ -151,9 +151,9 @@ class TestMyString(unittest.TestCase):
 				Array.from_iterable([3,0]),
 				Array.from_iterable([1,4]),
 				Array.from_iterable([5,0]),
-				Array.from_iterable([6,3]),
+				Array.from_iterable([6,4]),
 				Array.from_iterable([1,7]),
-				Array.from_iterable([3,0]),
+				Array.from_iterable([8,0]),
 			])
 		)
 		# self.assertEqual(String("abcdacbdabbde").compile_automata(String("abcde")),
