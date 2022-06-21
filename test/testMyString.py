@@ -13,6 +13,14 @@ class TestMyString(unittest.TestCase):
 		h[0] = 'T'
 		self.assertEqual(str(h), "Tello")
 		self.assertEqual(str(w*3), "WorldWorldWorld")
+		self.assertEqual(str(w[0:2]), "Wo")
+		self.assertEqual(str(w[1:]), "orld")
+		self.assertEqual(str(w[1::2]), "ol")
+		self.assertEqual(str(w[::2]), "Wrd")
+		self.assertEqual(str(w[-1]), "d")
+		self.assertEqual(str(w[-3:-1]), "rl")
+		self.assertEqual(str(w[-3:]), "rld")
+		self.assertEqual(str(w[-3::2]), "rd")
 
 
 if __name__ == '__main__':
