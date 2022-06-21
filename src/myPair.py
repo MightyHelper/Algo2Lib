@@ -4,7 +4,10 @@ class Pair:
 		self.second = second
 
 	def __str__(self):
-		return f"({self.first}|{self.second})"
+		s1, s2 = str(self.first), str(self.second)
+		if s1 == s2:
+			return f"({s1}|)"
+		return f"({s1}|{s2})"
 
 	def __eq__(self, other: object) -> bool:
 		if not isinstance(other, type(self)):

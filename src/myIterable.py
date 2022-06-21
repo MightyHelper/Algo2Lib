@@ -112,5 +112,8 @@ class Iterable(ABC):
 	def __add__(self, other):
 		if not isinstance(other, Iterable):
 			_, other = copy(self).push_back(other)
+			return other
 		return self.concat(other)
 
+	def __repr__(self):
+		return f"[{type(self).__name__}:{self}]"
