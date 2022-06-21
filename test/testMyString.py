@@ -144,15 +144,27 @@ class TestMyString(unittest.TestCase):
 		self.assertTrue(String("").starts_with(String("")))
 
 	def test_automata(self):
-		self.assertEqual(String("abcdacbdabbde").compile_automata(String("abcde")),
-			Array.from_iterable([
-				Array.from_iterable([1,1,1,1,5,1,1,1,9,1 ,1 ,1 ,1 ]),
-				Array.from_iterable([0,2,0,0,0,2,7,0,0,10,11,0 ,0 ]),
-				Array.from_iterable([0,0,3,0,0,6,0,0,0,0 ,3 ,0 ,0 ]),
-				Array.from_iterable([0,0,0,4,0,0,0,8,0,0 ,0 ,12,0 ]),
-				Array.from_iterable([0,0,0,0,0,0,0,0,0,0 ,0 ,0 ,13]),
+		self.assertEqual(String("ababaaba").compile_automata(String("ab")),
+			Array.from_iterable([  #  a,b,a,b,a,a,b,a
+				Array.from_iterable([1,0]),
+				Array.from_iterable([1,2]),
+				Array.from_iterable([3,0]),
+				Array.from_iterable([1,4]),
+				Array.from_iterable([5,0]),
+				Array.from_iterable([6,3]),
+				Array.from_iterable([1,7]),
+				Array.from_iterable([3,0]),
 			])
 		)
+		# self.assertEqual(String("abcdacbdabbde").compile_automata(String("abcde")),
+		# 	Array.from_iterable([
+		# 		Array.from_iterable([1,1,1,1,5,1,1,1,9,1 ,1 ,1 ,1 ]),
+		# 		Array.from_iterable([0,2,0,0,0,2,7,0,0,10,11,0 ,0 ]),
+		# 		Array.from_iterable([0,0,3,0,0,6,0,0,0,0 ,3 ,0 ,0 ]),
+		# 		Array.from_iterable([0,0,0,4,0,0,0,8,0,0 ,0 ,12,0 ]),
+		# 		Array.from_iterable([0,0,0,0,0,0,0,0,0,0 ,0 ,0 ,13]),
+		# 	])
+		# )
 
 	def test_ej12(self):
 		pass
