@@ -117,6 +117,7 @@ class TestMyString(unittest.TestCase):
 		A = [2 3 3 5 1
 		     1 1 4 1 1]
 		Transita por los estados
+		(Se lee #Estado seguido por caracter leido)
 		1a2a3a3b4a5b1a2a3b4a5a1b1a2b1a2a3b4
 		------------!----------------------
 		"""
@@ -195,9 +196,15 @@ class TestMyString(unittest.TestCase):
 		self.assertEqual(-1, String("abcd").rabin_karp_search(String("f")))
 
 	def test_ej14(self):
-		pass
+		self.assertEqual(0, String("abcd").kmp_search(String("a")))
+		self.assertEqual(0, String("abcd").kmp_search(String("ab")))
+		self.assertEqual(0, String("abcd").kmp_search(String("abcd")))
+		self.assertEqual(1, String("abcd").kmp_search(String("bcd")))
+		self.assertEqual(2, String("abcd").kmp_search(String("cd")))
+		self.assertEqual(-1, String("abcd").kmp_search(String("f")))
 
 	def test_ej15(self):
+		"""Some other day"""
 		pass
 
 	def test_indexof(self):
