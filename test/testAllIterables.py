@@ -53,6 +53,28 @@ def test_iterable(iterable_clz: Type[Iterable]):
 			self.assertEqual(v, 1)
 			self.assertEqual(arr[0], 1)
 
+		def test_inserts_iter(self):
+			v, arr = iterable_clz.from_iterable([0]).pop_front()
+
+			v, arr = arr.push_front(4)
+			v, arr = arr.push_back(5)
+			v, arr = arr.push_front(3)
+			v, arr = arr.push_back(6)
+			v, arr = arr.push_front(2)
+			v, arr = arr.push_front(1)
+			v, arr = arr.push_back(7)
+			self.assertEqual([*arr], [*range(1, 8)])
+			v, arr = arr.pop_front()
+			self.assertEqual(v, 1)
+			v, arr = arr.pop_front()
+			self.assertEqual(v, 2)
+			v, arr = arr.pop_back()
+			self.assertEqual(v, 7)
+			v, arr = arr.pop_back()
+			self.assertEqual(v, 6)
+			self.assertEqual(len(arr), 3)
+			self.assertEqual(str(arr), str([*range(3, 6)]))
+
 		def test_join(self):
 			arr = iterable_clz.from_iterable([1, 2, 3])
 			self.assertEqual(arr.join(""), "123")
