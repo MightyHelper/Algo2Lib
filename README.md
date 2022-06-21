@@ -1,3 +1,18 @@
+# Algo2Lib
+Lib para AlgEd2 de estructuras basicas
+- myArray (Basado en algo1)
+- myLinkedList
+- myPair
+- mySort
+- myHash
+- myString
+
+La mayoria - testeado
+
+Ver los tests en `/test/<>`
+
+# Some ideas for the future:
+
 ```mermaid
 classDiagram
 class Comparable{
